@@ -39,12 +39,11 @@ Markov Decision Process(MDP) tackles the challenge of reconciling extracting ent
 A Reinforcement Learning(RL) approach is is used to combine query formulation(for event coreference), extraction from new sources and value reconciliation.
 <br>
 ![fig1](/images/sample_news_article.png){: .floatright}
-<div class="floatleft">
+
 The model selects good actions for both article retrieval and value reconciliation(<b>action</b>) in order to optimize the <b>reward function</b> that reflects extraction accuracy and penalties for extra moves.<br>
 <b>RL agent</b> is trained using a [Deep Q-Network(DQN)](https://deepmind.com/research/dqn/) that simultaneously predicts both querying and reconciliation choices.<br>
 Maximum entropy model is used as the base extractor for <b>interpretation</b>.
-</b>
-</div>
+
 ## Information extraction task as a Markov Decision Process(MDP)
 	
 	
