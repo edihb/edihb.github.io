@@ -67,7 +67,9 @@ The state representation depends on the following -<br>
 2. One hot encoding matches between current and new values.
 3. Unigram/tf-idf counts of context words.
 4. tf-idf similarity between original and new article.
-<br></li><br>
+<br><br>
+```
+```
 <i><b>A = {a=(d,q)}</b></i> is the set of all actions depending on decision d and query choice q.<br>
 At each step, the agent makes a reconciliation decision <i>d</i> and query choice <i>q</i> with the episode ending when all entity values are accepted and the stop action is chosen.<br><br>
 <i><b>R(s,a)</b></i> is the reward function<br>
@@ -90,7 +92,7 @@ The DQN used consists of two linear layers (20 hidden units each) followed by re
 ### Data
 Annotated datasets with news articles and entities to be extracted.<br>
 ### Extraction model
-Bing Search API is used for different automatically generated queries from the template.<br>
+Bing Search API is used for different automatically generated queries from the template.<br><br>
 <b>Baseline classifiers</b>
 1. <b>Basic Extractors -</b><br>
 	* Maximum Entropy 
@@ -102,8 +104,10 @@ Bing Search API is used for different automatically generated queries from the t
 	Demonstrates the importance of modelling the problem in RL Framework.<br>
 	This classifier does not implement a classification algorithm of its own but operates over the same input space as DQN and produces the same set of reconciliation decisions {d} by aggregating value predictions using the confidence based scheme.
 4. <b>Oracle -</b><br>
-	Gold standard score computed assuming perfect reconciliation and querying decisions on top of Maxent base extractor to analyze the contributions of the RL system in isolation of base extractor limitations.<br></li>
+	Gold standard score computed assuming perfect reconciliation and querying decisions on top of Maxent base extractor to analyze the contributions of the RL system in isolation of base extractor limitations.<br>
 <br>
+```
+```
 <b>RL Models</b>
 1. <b>RL-Basic -</b><br>
 	Performs only reconciliation decisions.
@@ -130,6 +134,11 @@ Narasimhan, Karthik, Adam Yala, and Regina Barzilay. "Improving Information Extr
 </cite>
 <br> <br>
 https://github.com/karthikncode/DeepRL-InformationExtraction
+
+
+
+
+
 
 
 
