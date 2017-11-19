@@ -43,7 +43,7 @@ A Reinforcement Learning(RL) approach is is used to combine query formulation(fo
 The model selects good actions for both article retrieval and value reconciliation(<b>action</b>) in order to optimize the <b>reward function</b> that reflects extraction accuracy and penalties for extra moves.<br>
 <b>RL agent</b> is trained using a [Deep Q-Network(DQN)](https://deepmind.com/research/dqn/) that simultaneously predicts both querying and reconciliation choices.<br>
 Maximum entropy model is used as the base extractor for <b>interpretation</b>.
-
+<br>
 ## Information extraction task as a Markov Decision Process(MDP)
 	
 	
