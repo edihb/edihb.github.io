@@ -3,7 +3,6 @@ layout: post
 title: "Improving Information Extraction by Acquiring External Evidence with Reinforcement Learning" Summary
 category: jekyll update
 ---
-
 <style>
 {% include blogposts.css %}
 </style>
@@ -54,10 +53,10 @@ Introducing the MDP framework is important as it allows dynamic integration of e
 <br>
 The top box of each state depics the current entities and the bottom box shows new entities extracted from a downloaded article on the same event after querying.<br>
 At each step the MDP decides whether to accept an entities value and reconcile it or continue inspecting further articles by generating queries from a template created using the title of the article along with words most likely to co-occur with each entity type.<br>
-Since the IR System is looking at the shooter database, the entities extracted are as follows -
+Since the IR System is looking at the shooter database, the entities extracted are as follows -<br>
 ![entities](/images/entity_values.png)
 <br>
-<b>MDP as a tuple: (S, A, T, R)<b><br>
+<b>MDP as a tuple: (S, A, T, R)</b><br>
 Where, <br>
 <i>S = {s}</i> is the state space<br>
 ![states](/images/state_rep_mdp.png)
@@ -67,6 +66,7 @@ The state representation depends on the following -<br>
 2. One hot encoding matches between current and new values.
 3. Unigram/tf-idf counts of context words.
 4. tf-idf similarity between original and new article.
+<br>
 <i>A = {a=(d,q)}</i> is the set of all actions depending on decision d and query choice q<br>
 At each step, the agent makes a reconciliation decision <i>d</i> and query choice <i>q</i> with the episode ending when all entity values are accepted and the stop action is chosen.<br>
 <i>R(s,a)</i> is the reward function<br>
@@ -133,6 +133,11 @@ Narasimhan, Karthik, Adam Yala, and Regina Barzilay. "Improving Information Extr
 </cite>
 <br> <br>
 https://github.com/karthikncode/DeepRL-InformationExtraction
+
+
+
+
+
 
 
 
