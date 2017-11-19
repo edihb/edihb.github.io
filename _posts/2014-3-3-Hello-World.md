@@ -29,10 +29,10 @@ The new IE system involves querying for such alternative articles and extracting
 Such stereotypical phrasing is easier to process for most IE systems and the new system boosts extraction accuracy compared to traditional extractor systems by upto 7%.<br>
 ### Challenges with the new system <br>
 1. <b>Performing event coreference -</b><br>
-Retrieving suitable articles describing the same event.
+	Retrieving suitable articles describing the same event.
 2. <b>Reconciling the entities extracted from different documents obtained -</b><br>
-Sometimes tangential results are obtained as querying for similar documents returns documents about other similar incidents.<br>
-Additionally, values extracted from different sources may be different (as some sources are inaccurate).<br>
+	Sometimes tangential results are obtained as querying for similar documents returns documents about other similar incidents.<br>
+	Additionally, values extracted from different sources may be different (as some sources are inaccurate).<br>
 	
 ## Framework
 <b>Markov Decision Process(MDP)</b> is introduced to tackle the challenge of reconciling extracted entities. The system goes through alternating phases of querying to retrieve the articles and integrating the extracted values if the confidence is sufficiently high. It satisfies the <i>Markov Property</i> as the future state of the model depends only on the present state and not on the sequence of all preceeding states.<br>
@@ -67,7 +67,7 @@ The state representation depends on the following -<br>
 2. One hot encoding matches between current and new values.
 3. Unigram/tf-idf counts of context words.
 4. tf-idf similarity between original and new article.
-<br><br>
+<br></li><br>
 <i><b>A = {a=(d,q)}</b></i> is the set of all actions depending on decision d and query choice q.<br>
 At each step, the agent makes a reconciliation decision <i>d</i> and query choice <i>q</i> with the episode ending when all entity values are accepted and the stop action is chosen.<br><br>
 <i><b>R(s,a)</b></i> is the reward function<br>
@@ -79,10 +79,10 @@ The transition funciton maps the old state to the new state based on the action 
 
 ## Reinforcement Learning for Information Extraction
 The agent employs a <i><b>learning function Q(s,a)</b></i> to determine which action to perform in state <i>s</i>.<br>
-The learning technique employed is [Q-learning](https://link.springer.com/article/10.1007/BF00992698) wherin the agent iteratively updates Q(s,a) using the [recursive Bellman equation](https://en.wikipedia.org/wiki/Bellman_equation) and rewards function.<br>
+The learning technique employed is [Q-learning](https://link.springer.com/article/10.1007/BF00992698) wherin the agent iteratively updates Q(s,a) using the [recursive Bellman equation](https://en.wikipedia.org/wiki/Bellman_equation) and rewards function <i>r</i>.<br>
 ![bellman](/images/bellman.png){: .center-image }
 <br>
-Thus we can see that the dynamic optimization problem is broken down into smaller sub-problems involving the reward <i>r</i> and future rewards over all possible transitions discounted by a factor γ	\gammma.<br>
+Thus we can see that the dynamic optimization problem is broken down into smaller sub-problems involving the reward <i>r</i> and future rewards over all possible transitions discounted by a factor γ.<br>
 Since the state space is continuous, a [deep Q-Network (DQN)](https://deepmind.com/research/dqn/) is used as a function approximator. It can continuously adapt is behaviour without any human intervention to capture non-linear interactions  between information in the states and performs better than linear approximators.<br>
 The DQN used consists of two linear layers (20 hidden units each) followed by rectified linear units (ReLU), along with two separate output layers to simultaneously predict <i><b>Q(s,d)</b></i> for reconciliation decisions and <i><b>Q(s,q)</b></i> for query choices.<br>
 
@@ -91,26 +91,26 @@ The DQN used consists of two linear layers (20 hidden units each) followed by re
 Annotated datasets with news articles and entities to be extracted.<br>
 ### Extraction model
 Bing Search API is used for different automatically generated queries from the template.<br>
-#### Baseline classifiers 
+<b>Baseline classifiers</b>
 1. <b>Basic Extractors -</b><br>
-* Maximum Entropy 
-* CRF (results were worse than Maxent)
+	* Maximum Entropy 
+	* CRF (results were worse than Maxent)
 2. <b>Aggregation Systems -</b><br>
-* Confidence model for value reconciliation that selects the entity with the highest confidence core assigned by the base extractor.
-* Majority model that takes the majority vote over all extracted values.
+	* Confidence model for value reconciliation that selects the entity with the highest confidence core assigned by the base extractor.
+	* Majority model that takes the majority vote over all extracted values.
 3. <b>Meta-classifier -</b><br> 
-Demonstrates the importance of modelling the problem in RL Framework.<br>
-This classifier does not implement a classification algorithm of its own but operates over the same input space as DQN and produces the same set of reconciliation decisions {d} by aggregating value predictions using the confidence based scheme.
+	Demonstrates the importance of modelling the problem in RL Framework.<br>
+	This classifier does not implement a classification algorithm of its own but operates over the same input space as DQN and produces the same set of reconciliation decisions {d} by aggregating value predictions using the confidence based scheme.
 4. <b>Oracle -</b><br>
-Gold standard score computed assuming perfect reconciliation and querying decisions on top of Maxent base extractor to analyze the contributions of the RL system in isolation of base extractor limitations.<br>
+	Gold standard score computed assuming perfect reconciliation and querying decisions on top of Maxent base extractor to analyze the contributions of the RL system in isolation of base extractor limitations.<br></li>
 <br>
-#### RL Models
+<b>RL Models</b>
 1. <b>RL-Basic -</b><br>
-Performs only reconciliation decisions.
+	Performs only reconciliation decisions.
 2. <b>RL-Query -</b><br>
-Takes only query decisions with reconciliation strategy fixed.
+	Takes only query decisions with reconciliation strategy fixed.
 3. <b>RL-Extract -</b><br>
-Full system incorporating both reconciliation and query decisions.<br><br>
+	Full system incorporating both reconciliation and query decisions.<br><br>
 
 ## Results
 ![results](/images/results.png){: .center-image }
@@ -130,6 +130,11 @@ Narasimhan, Karthik, Adam Yala, and Regina Barzilay. "Improving Information Extr
 </cite>
 <br> <br>
 https://github.com/karthikncode/DeepRL-InformationExtraction
+
+
+
+
+
 
 
 
