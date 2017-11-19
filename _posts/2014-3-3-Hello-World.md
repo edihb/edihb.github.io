@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Improving Information Extraction by Acquiring External Evidence with Reinforcement Learning" Summary
-category: jekyll update
 ---
+
 <style>
 {% include blogposts.css %}
 </style>
@@ -19,7 +19,7 @@ Information extraction (IE) is the task of automatically extracting structured i
 ![fig1](/images/sample_news_article.png){: .center-image }
 <center><b>Figure 1: Sample news article on a shooting case.</b></center>
 <br>
-The document does not explicitly name the shooter (<i>Scott Westerhuis</i>). The total number of fatalities is also not explicitly metioned (<i>A couple and four children</i>*=6*) <br>
+The document does not explicitly name the shooter (<i>Scott Westerhuis</i>). The total number of fatalities is also not explicitly metioned (<i>A couple and four children</i><b>=6</b>) <br>
 This paper suggests that a large annotated training set may not cover all such cases and proposes a system that utilizes <b>external sources</b> to resolve such text interpretation ambiguities.
 ### The solution
 ![fig2](/images/2articles.png){: .center-image }
@@ -41,12 +41,12 @@ Additionally, values extracted from different sources may be different (as some 
 ![rl](/images/reinforcement_learning.png){: .floatright}
 
 The model selects good actions for both article retrieval and value reconciliation(<b>action</b>) in order to optimize the <b>reward function</b> that reflects extraction accuracy and penalties for extra moves.<br>
-<b>RL agent</b> is trained using a [Deep Q-Network(DQN)](https://deepmind.com/research/dqn/) that simultaneously predicts both querying and reconciliation choices.<br>
+<b>RL agent</b> is trained using a [Deep Q-Network (DQN)](https://deepmind.com/research/dqn/) that simultaneously predicts both querying and reconciliation choices.<br>
 Maximum entropy model is used as the base extractor for <b>interpretation</b>.
 <br>
 
 ## Information extraction task as a Markov Decision Process (MDP)
-Introducing the MDP framework is important as it allows dynamic integration of entity predictions while simultaneously providing flexibility to choose the type of articles to extract form(query template).<br>
+Introducing the MDP framework is important as it allows dynamic integration of entity predictions while simultaneously providing flexibility to choose the type of articles to extract from (query template).<br>
 
 ![mdp](/images/mdp_transition.png){: .center-image }
 <center><b>Figure 3: Illustration of transition in MDP.</b></center>
@@ -54,75 +54,72 @@ Introducing the MDP framework is important as it allows dynamic integration of e
 The top box of each state depics the current entities and the bottom box shows new entities extracted from a downloaded article on the same event after querying.<br>
 At each step the MDP decides whether to accept an entities value and reconcile it or continue inspecting further articles by generating queries from a template created using the title of the article along with words most likely to co-occur with each entity type.<br>
 Since the IR System is looking at the shooter database, the entities extracted are as follows -<br>
-![entities](/images/entity_values.png)
+![entities](/images/entity_values.png){: .center-image }
 <br>
 <b>MDP as a tuple: (S, A, T, R)</b><br>
 Where, <br>
-<i>S = {s}</i> is the state space<br>
-![states](/images/state_rep_mdp.png)
-The state of the MDP is represented based on the values of the entities.
+<i><b>S = {s}</b></i> is the state space.<br>
+![states](/images/state_rep.png){: .center-image }
+<br>
+The state of the MDP is represented based on the values of the entities.<br>
 The state representation depends on the following -<br>
 1. Current confidence and new confidence of entities.
 2. One hot encoding matches between current and new values.
 3. Unigram/tf-idf counts of context words.
 4. tf-idf similarity between original and new article.
+<br><br>
+<i><b>A = {a=(d,q)}</b></i> is the set of all actions depending on decision d and query choice q.<br>
+At each step, the agent makes a reconciliation decision <i>d</i> and query choice <i>q</i> with the episode ending when all entity values are accepted and the stop action is chosen.<br><br>
+<i><b>R(s,a)</b></i> is the reward function<br>
+![reward](/images/reward_function.png){: .center-image }
 <br>
-<i>A = {a=(d,q)}</i> is the set of all actions depending on decision d and query choice q<br>
-At each step, the agent makes a reconciliation decision <i>d</i> and query choice <i>q</i> with the episode ending when all entity values are accepted and the stop action is chosen.<br>
-<i>R(s,a)</i> is the reward function<br>
-![reward](/images/reward_function.png)
 The reward function maximizes the final extraction accuracy while minimizing the number of queries by setting a negative reward to penalize the agent for longer episodes.<br>
-<i>T(s'|s,a)</i> is the transition function<br>
+<i><b>T(s'|s,a)</b></i> is the transition function<br>
 The transition funciton maps the old state to the new state based on the action chosen by the agent.<br>
 
 ## Reinforcement Learning for Information Extraction
+The agent employs a <i><b>learning function Q(s,a)</b></i> to determine which action to perform in state <i>s</i>.<br>
+The learning technique employed is [Q-learning](https://link.springer.com/article/10.1007/BF00992698) wherin the agent iteratively updates Q(s,a) using the [recursive Bellman equation](https://en.wikipedia.org/wiki/Bellman_equation) and rewards function.<br>
+![bellman](/images/bellman.png){: .center-image }
+<br>
+Thus we can see that the dynamic optimization problem is broken down into smaller sub-problems involving the reward <i>r</i> and future rewards over all possible transitions discounted by a factor γ	\gammma.<br>
+Since the state space is continuous, a [deep Q-Network (DQN)](https://deepmind.com/research/dqn/) is used as a function approximator. It can continuously adapt is behaviour without any human intervention to capture non-linear interactions  between information in the states and performs better than linear approximators.<br>
+The DQN used consists of two linear layers (20 hidden units each) followed by rectified linear units (ReLU), along with two separate output layers to simultaneously predict <i><b>Q(s,d)</b></i> for reconciliation decisions and <i><b>Q(s,q)</b></i> for query choices.<br>
 
+## Experiment
+### Data
+Annotated datasets with news articles and entities to be extracted.<br>
+### Extraction model
+Bing Search API is used for different automatically generated queries from the template.<br>
+#### Baseline classifiers 
+1. <b>Basic Extractors -</b><br>
+* Maximum Entropy 
+* CRF (results were worse than Maxent)
+2. <b>Aggregation Systems -</b><br>
+* Confidence model for value reconciliation that selects the entity with the highest confidence core assigned by the base extractor.
+* Majority model that takes the majority vote over all extracted values.
+3. <b>Meta-classifier -</b><br> 
+Demonstrates the importance of modelling the problem in RL Framework.<br>
+This classifier does not implement a classification algorithm of its own but operates over the same input space as DQN and produces the same set of reconciliation decisions {d} by aggregating value predictions using the confidence based scheme.
+4. <b>Oracle -</b><br>
+Gold standard score computed assuming perfect reconciliation and querying decisions on top of Maxent base extractor to analyze the contributions of the RL system in isolation of base extractor limitations.<br>
+<br>
+#### RL Models
+1. <b>RL-Basic -</b><br>
+Performs only reconciliation decisions.
+2. <b>RL-Query -</b><br>
+Takes only query decisions with reconciliation strategy fixed.
+3. <b>RL-Extract -</b><br>
+Full system incorporating both reconciliation and query decisions.<br><br>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## Results
+![results](/images/results.png){: .center-image }
+<center><b>Figure 4: Accuracy of baseline, DQN and Oracle on Shootings and Adulteration datasets.</b></center>
+<br>
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+## Conclusion	
 	
 	
 	
@@ -133,6 +130,11 @@ Narasimhan, Karthik, Adam Yala, and Regina Barzilay. "Improving Information Extr
 </cite>
 <br> <br>
 https://github.com/karthikncode/DeepRL-InformationExtraction
+
+
+
+
+
 
 
 
