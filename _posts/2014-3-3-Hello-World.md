@@ -44,6 +44,7 @@ The model selects good actions for both article retrieval and value reconciliati
 <b>RL agent</b> is trained using a [Deep Q-Network(DQN)](https://deepmind.com/research/dqn/) that simultaneously predicts both querying and reconciliation choices.<br>
 Maximum entropy model is used as the base extractor for <b>interpretation</b>.
 </b>
+</div>
 ## Information extraction task as a Markov Decision Process(MDP)
 	
 	
