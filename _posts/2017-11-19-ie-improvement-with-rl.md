@@ -89,11 +89,11 @@ The DQN used consists of two linear layers (20 hidden units each) followed by re
 <br>
 ![rlalgo](/images/algorithm.png){: .center-image }
 <br>
-<center><b>Figure 4: DQN training procedure algorith.</b></center>
+<center><b>Figure 4: DQN training procedure algorithm.</b></center>
 The above algorithm details the DQN training procedure.<br>
 Just as in any other ML algorithm, the loss function is being minimized.<br>
 Stochastic gradient descent with RMSprop is used for <b>Parameter Learning</b> of parameters θ of the DQN.<br>
-A breif description the optimization methods (RMSprop and more) for Deep Networks can be found [here](http://www.cs.cmu.edu/~imisra/data/Optimization_2015_11_11.pdf).<br>
+A brief description the optimization methods (RMSprop and more) for Deep Networks can be found [here](http://www.cs.cmu.edu/~imisra/data/Optimization_2015_11_11.pdf).<br>
 Each parameter update aims to close the gap between the Q(st,at; θ) predicted by the DQN and the expected Q-value from the Bellman equation.<br>
 ## Experiment
 ### Data
