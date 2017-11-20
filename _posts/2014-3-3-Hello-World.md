@@ -9,7 +9,7 @@ title: '"Improving Information Extraction by Acquiring External Evidence with Re
 
 Information extraction (IE) is the task of automatically extracting structured information from unstructured or semi-structured machine readable documents. IE systems require large amounts of annotated data to deliver high performance. This paper summary describes the task of acquiring and incorporating <b>external evidence</b> that improves extraction accuracy when <b>training data is scarce</b>. 
 
-## Databsases used in the paper 
+## Databases used in the paper 
 1. Shooting incidents
 2. Food adulteration cases
 
@@ -74,7 +74,7 @@ At each step, the agent makes a reconciliation decision <i>d</i> and query choic
 <i><b>R(s,a)</b></i> is the reward function<br>
 ![reward](/images/reward_function.png){: .center-image }
 <br>
-The reward function maximizes the final extraction accuracy while minimizing the number of queries by setting a negative reward to penalize the agent for longer episodes.<br>
+The reward function maximizes the final extraction accuracy while minimizing the number of queries by setting a negative reward to penalize the agent for longer episodes.<br><br>
 <i><b>T(s'|s,a)</b></i> is the transition function<br>
 The transition funciton maps the old state to the new state based on the action chosen by the agent.<br>
 
@@ -86,8 +86,10 @@ The learning technique employed is [Q-learning](https://link.springer.com/articl
 Thus we can see that the dynamic optimization problem is broken down into smaller sub-problems involving the reward <i>r</i> and future rewards over all possible transitions discounted by a factor γ.<br>
 Since the state space is continuous, a [deep Q-Network (DQN)](https://deepmind.com/research/dqn/) is used as a function approximator. It can continuously adapt is behaviour without any human intervention to capture non-linear interactions  between information in the states and performs better than linear approximators.<br>
 The DQN used consists of two linear layers (20 hidden units each) followed by rectified linear units (ReLU), along with two separate output layers to simultaneously predict <i><b>Q(s,d)</b></i> for reconciliation decisions and <i><b>Q(s,q)</b></i> for query choices.<br>
+<br>
 ![rlalgo](/images/algorithm.png){: .center-image }
 <br>
+<center><b>Figure 4: DQN training procedure algorith.</b></center>
 The above algorithm details the DQN training procedure.<br>
 Just as in any other ML algorithm, the loss function is being minimized.<br>
 Stochastic gradient descent with RMSprop is used for <b>Parameter Learning</b> of parameters θ of the DQN.<br>
@@ -110,13 +112,12 @@ Bing Search API is used for different automatically generated queries from the t
 	This classifier does not implement a classification algorithm of its own but operates over the same input space as DQN and produces the same set of reconciliation decisions {d} by aggregating value predictions using the confidence based scheme.
 4. <b>Oracle -</b><br>
 	Gold standard score computed assuming perfect reconciliation and querying decisions on top of Maxent base extractor to analyze the contributions of the RL system in isolation of base extractor limitations.<br>
-<br>
 ### RL Models
-1. <b>RL-Basic -</b><br>
+* <b>RL-Basic -</b><br>
 	Performs only reconciliation decisions.
-2. <b>RL-Query -</b><br>
+* <b>RL-Query -</b><br>
 	Takes only query decisions with reconciliation strategy fixed.
-3. <b>RL-Extract -</b><br>
+* <b>RL-Extract -</b><br>
 	Full system incorporating both reconciliation and query decisions.<br><br>
 
 ## Results
@@ -141,31 +142,6 @@ Narasimhan, Karthik, Adam Yala, and Regina Barzilay. "Improving Information Extr
 </cite>
 <br> <br>
 https://github.com/karthikncode/DeepRL-InformationExtraction
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
