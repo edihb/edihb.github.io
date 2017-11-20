@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Improving Information Extraction by Acquiring External Evidence with Reinforcement Learning" Summary
+title: '"Improving Information Extraction by Acquiring External Evidence with Reinforcement Learning" Summary'
 ---
 
 <style>
@@ -26,7 +26,7 @@ This paper suggests that a large annotated training set may not cover all such c
 <center><b>Figure 2: Articles with explicit mentions of fatality count and shooter name.</b></center>
 <br>
 The new IE system involves querying for such alternative articles and extracting information from them instead of the original source. <br>
-Such stereotypical phrasing is easier to process for most IE systems and the new system boosts extraction accuracy compared to traditional extractor systems by upto 7%.<br>
+Such stereotypical phrasing is easier to process for most IE systems and the new system boosts extraction accuracy compared to traditional extractor systems by upto 11.5%.<br>
 ### Challenges with the new system <br>
 1. <b>Performing event coreference -</b><br>
 	Retrieving suitable articles describing the same event.
@@ -68,8 +68,7 @@ The state representation depends on the following -<br>
 3. Unigram/tf-idf counts of context words.
 4. tf-idf similarity between original and new article.
 <br><br>
-```
-```
+
 <i><b>A = {a=(d,q)}</b></i> is the set of all actions depending on decision d and query choice q.<br>
 At each step, the agent makes a reconciliation decision <i>d</i> and query choice <i>q</i> with the episode ending when all entity values are accepted and the stop action is chosen.<br><br>
 <i><b>R(s,a)</b></i> is the reward function<br>
@@ -87,7 +86,13 @@ The learning technique employed is [Q-learning](https://link.springer.com/articl
 Thus we can see that the dynamic optimization problem is broken down into smaller sub-problems involving the reward <i>r</i> and future rewards over all possible transitions discounted by a factor γ.<br>
 Since the state space is continuous, a [deep Q-Network (DQN)](https://deepmind.com/research/dqn/) is used as a function approximator. It can continuously adapt is behaviour without any human intervention to capture non-linear interactions  between information in the states and performs better than linear approximators.<br>
 The DQN used consists of two linear layers (20 hidden units each) followed by rectified linear units (ReLU), along with two separate output layers to simultaneously predict <i><b>Q(s,d)</b></i> for reconciliation decisions and <i><b>Q(s,q)</b></i> for query choices.<br>
-
+![rlalgo](/images/algorithm.png){: .center-image }
+<br>
+The above algorithm details the DQN training procedure.<br>
+Just as in any other ML algorithm, the loss function is being minimized.<br>
+Stochastic gradient descent with RMSprop is used for <b>Parameter Learning</b> of parameters θ of the DQN.<br>
+A breif description the optimization methods (RMSprop and more) for Deep Networks can be found [here](http://www.cs.cmu.edu/~imisra/data/Optimization_2015_11_11.pdf).<br>
+Each parameter update aims to close the gap between the Q(st,at; θ) predicted by the DQN and the expected Q-value from the Bellman equation.<br>
 ## Experiment
 ### Data
 Annotated datasets with news articles and entities to be extracted.<br>
@@ -106,9 +111,7 @@ Bing Search API is used for different automatically generated queries from the t
 4. <b>Oracle -</b><br>
 	Gold standard score computed assuming perfect reconciliation and querying decisions on top of Maxent base extractor to analyze the contributions of the RL system in isolation of base extractor limitations.<br>
 <br>
-```
-```
-<b>RL Models</b>
+### RL Models
 1. <b>RL-Basic -</b><br>
 	Performs only reconciliation decisions.
 2. <b>RL-Query -</b><br>
@@ -120,13 +123,17 @@ Bing Search API is used for different automatically generated queries from the t
 ![results](/images/results.png){: .center-image }
 <center><b>Figure 4: Accuracy of baseline, DQN and Oracle on Shootings and Adulteration datasets.</b></center>
 <br>
-	
+The above table shows that the new system (RL-Extract) obtains a substantial gain over all the baseline classifiers over both domains.<br>
+The importance of sequential decision making can be seen as RL-Extract performs significantly better than the meta-classifier. This is because the meta-classifier aggregates all documents including noisy and irrelevant documents.<br>
+Enabling RL-Query results in significant improvement over RL-Basic in both domains demonstrating the need to perform query selection and reconciliation simultaneously.	
 	
 	
 ## Conclusion	
-	
-	
-	
+![con](/images/conclusion.png){: .center-image }
+<center><b>Figure 5: Evolution of average reward (solid black) and accuracy on various entities (red=ShooterName, magenta=NumKilled, blue=NumWounded, green=City) on the Shootings domain test set.</b></center>
+<br>	
+The above learning curves show that the reward improves gradually and the accuracy on the entity increases simultaneously with each iteration.<br>
+Thus in domains with scarcity of training data, the new system is found to show considerable improvement over existing baseline in terms of accuracy of extraction.<br>	
 		
 ## Acknowledgements
 <cite> 
@@ -134,6 +141,11 @@ Narasimhan, Karthik, Adam Yala, and Regina Barzilay. "Improving Information Extr
 </cite>
 <br> <br>
 https://github.com/karthikncode/DeepRL-InformationExtraction
+
+
+
+
+
 
 
 
